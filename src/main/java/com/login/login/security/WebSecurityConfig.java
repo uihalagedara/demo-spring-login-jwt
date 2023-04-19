@@ -3,7 +3,6 @@ package com.login.login.security;
 import com.login.login.security.jwt.AuthEntryPointJwt;
 import com.login.login.security.jwt.AuthTokenFilter;
 import com.login.login.security.services.UserDetailsSeviceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,10 +23,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         prePostEnabled = true)
 public class WebSecurityConfig  {
 
-    @Autowired
+
     UserDetailsSeviceImpl userDetailsService;
 
-    @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
@@ -36,7 +34,7 @@ public class WebSecurityConfig  {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider( UserDetailsSeviceImpl userDetailsService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
         authProvider.setUserDetailsService(userDetailsService);
@@ -64,33 +62,12 @@ public class WebSecurityConfig  {
                 .antMatchers("/api/test/**").permitAll()
                 .anyRequest().authenticated();
 
-        http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider(userDetailsService));
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-//    @Override
-//  public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//    authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//  }
-//
-//  @Bean
-//  @Override
-//  public AuthenticationManager authenticationManagerBean() throws Exception {
-//    return super.authenticationManagerBean();
-//  }
-//
-// @Override
-//  protected void configure(HttpSecurity http) throws Exception {
-//    http.cors().and().csrf().disable()
-//      .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-//      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//      .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-//     .antMatchers("/api/test/**").permitAll()
-//      .anyRequest().authenticated();
-//
-//    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-//  }
+
 }
