@@ -21,7 +21,7 @@ public class TestContoller {
         return "User Content.";
     }
 
-    @GetMapping("/mod")
+    @GetMapping("/mode")
     @PreAuthorize("hasRole('MODERATOR')")
     public String moderatorAccess() {
         return "Moderator Board.";
