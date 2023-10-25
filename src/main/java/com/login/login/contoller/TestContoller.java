@@ -32,4 +32,25 @@ public class TestContoller {
     public String adminAccess() {
         return "Admin Board.";
     }
+
+    @GetMapping("/test")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminAccess() {
+        String sql = "SELECT 
+            "PP.provinceCode, "
+            "PP.description, " +
+            "PP.status.description, " +
+            "PP.lastupdateduser, " +
+            "PP.lastupdatedtime, " +
+            "PP.createdtime, " +
+            "PP.remarks, " +
+            "PP.email, " +
+            "PP.country.description " +
+            ") FROM " +
+            "Province PP " +
+            "WHERE PP.provinceCode LIKE %?1% AND PP.description LIKE %?2% AND PP.status.statuscode like %?3% AND PP.country.countrycode like %?4%  " +
+            "ORDER BY " +
+            "PP.lastupdatedtime DESC"
+        return "Admin Board.";
+    }
 }
